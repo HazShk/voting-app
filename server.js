@@ -19,13 +19,9 @@ const db = mysql.createConnection(
   console.log("Connected to the election database.")
 );
 
-/* Test express 
-app.get("/", (req, res) => {
-  res.json({
-    message: "Hello World",
-  });
-});
-*/
+db.query(`SELECT * FROM candidates`, (err, rows) => {
+    console.log(rows);
+})
 
 // Default response for any other request (Not Found)
 app.use((req, res) => {
