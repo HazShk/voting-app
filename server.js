@@ -20,33 +20,46 @@ const db = mysql.createConnection(
 );
 
 //create a candidate
-const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected) VALUES(?,?,?,?)`;
-const params = [1, "Hassan", "Shaikh", 1];
-db.query(
-  sql,
-  params,
-  (err,
-  (result) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log(result);
-  })
-);
+const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected) 
+              VALUES (?,?,?,?)`;
+const params = [1, "Hassan", "Firbank", 1];
 
-/*
-//get all candidates
-db.query(`SELECT * FROM candidates`, (err, rows) => {
-    console.log(rows);
-})
-*/
-
-//get single candidates
-db.query(`SELECT * FROM candidates WHERE id = 10`, (err, row) => {
+db.query(sql, params, (err, result) => {
   if (err) {
     console.log(err);
   }
-  console.log(row);
+  console.log(result);
+});
+
+// Get All Candidates
+app.get("/api/candidates", (req, res) => {
+  const sql = `SELECT * FROM candidates`;
+  db.query(sql, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: rows,
+    });
+  });
+});
+
+//get single candidates
+app.get("/api/candidate/:id", (req, res) => {
+  const sql = `SELECT * FROM candidates WHERE id =?`;
+  const params = [req.params.id];
+  db.query(sql, params, (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: rows,
+    });
+  });
 });
 
 //Delete a candidate
